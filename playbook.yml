@@ -1,0 +1,34 @@
+- hosts: all
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+- hosts: webserver
+  tasks:
+    - name: Install Nginx dan PHP
+      apt:
+        pkg:
+        - nginx
+        - php-fpm 
+        - php-common
+- hosts: database
+  tasks:
+    - name: Install MariaDB
+      apt:
+        name: ['mariadb-server', 'python3-mysqldb']
+    - name: Membuat database db_app
+      mysql_db:     
+        name: db_app 
+        state: present
+    - name: Membuat user user_app dan beri hak akses ke db_app
+      mysql_user:
+        name: user_app
+        password: rahasia 
+        priv: 'db_app.*:ALL'
+        state: present
+    - name: Membuat password root MariaDB
+      mysql_user:
+        name: root
+        password: rahasia
+        state: present
