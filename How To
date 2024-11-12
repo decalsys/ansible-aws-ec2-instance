@@ -1,0 +1,53 @@
+1. Create 3 EC2 instance
+2. Change Hostname Ec2 Instance
+
+3. Ec2 Instance
+   Ansible cn 3.83.22.162 172.31.80.99
+   Webserver 54.90.86.88 172.31.93.8
+   Database 54.165.208.154 172.31.94.204
+
+4. Install Ansible di Ubuntu-control node
+	sudo apt update
+	sudo apt install software-properties-common -y
+	sudo add-apt-repository --yes --update ppa:ansible/ansible
+	sudo apt install ansible -y
+	ansible --version
+
+5. create ssh keygen
+	ssh-keygen -t rsa
+	cat .ssh/id_rsa.pub
+	copy .ssh/id_rsa.pub
+
+6. create file ssh di node 1 & 2
+	nano .ssh/authorized_keys
+	paste from cat .ssh/id_rsa.pub control node
+	cat .ssh/authorized_keys
+
+7. SSH Test Connection
+	ssh -i ~/.ssh/id_rsa root@172.31.93.8
+	ssh -i ~/.ssh/id_rsa root@172.31.94.204	
+
+8. Edit file inventory to node 1
+	cd /etc/ansible
+	cp file hosts
+	edit file hosts
+
+	[webserver]
+	172.31.93.8
+
+	[database]
+	172.31.94.204
+
+9. Test Connection SSH wih ansible
+	ansible webserver -m ping, or
+	ansible database -m ping, or
+	ansible -i hosts all -m ping 	
+
+10. Create Directory
+	mkdir playbooks && cd playbooks
+	nano playbook.yml
+	https://github.com/decalsys/ansible-aws-ec2-instance
+
+11. Execution playbook
+	ansible-playbook playbooks/playbook.yml -i hosts,or
+	ansible-playbook -i hosts playbook.yml
